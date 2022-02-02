@@ -59,7 +59,15 @@ function __initClient()
 
     socket.on('connect',
         function () {
-
+			if (__clientID == undefined)
+				_getNewClientInstanceID(
+					function(resp)
+					{
+						console.debug("Get New Client ID in Init.js (96)");
+						console.debug(resp);
+						console.log(resp);
+						__clientID = resp;
+					});
             if (window.location.search == '' ||
                 ('aswid' in params && 'cswid' in params))
                 HttpUtils.httpReq(

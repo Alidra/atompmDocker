@@ -44,6 +44,7 @@
 
 /******************************** GLOBAL VARS *********************************/
 var __user = undefined,
+	__clientID = undefined,
 	 __wid,
 	 __aswid,
 	 __prefs,
@@ -213,6 +214,35 @@ function _getUserPreferences(callback,subset)
 				callback(utils.jsonp(resp));
 		});
 }
+
+/**
+ * Retrieves a new client ID for the current instance
+ * in the callback function
+ * 
+ * @param callback the function that the value is passed to
+ * @param subset the matching preference entry
+ */
+ function _getNewClientInstanceID(callback,subset)
+ {
+	 console.debug("Get Client ID");
+	 console.debug(subset);
+	 HttpUtils.httpReq(
+		 'GET',
+		 HttpUtils.url('/newCID',__NO_WID),
+		 (subset == undefined ? 
+			  undefined : 
+			 '?subset='+encodeURIComponent(utils.jsons(subset))),
+		 function(statusCode,resp)
+		 {
+			 console.debug("Callback Get Client ID");
+			 console.debug(statusCode);
+			 console.debug(resp);
+			 if( ! utils.isHttpSuccessCode(statusCode) )
+				 UserManagement.logout(); //probably not
+			 else
+				 callback(utils.jsonp(resp));
+		 });
+ }
 
 /**
  * Generates an HTTP request

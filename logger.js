@@ -11,6 +11,7 @@
  */
 
 let curr_log_level = 2;
+let global_log_level = 0;
 
 const LOG_LEVELS = {
     ERROR: 0,
@@ -22,8 +23,17 @@ const LOG_LEVELS = {
     SILLY: 6
 }
 
+function set_global_level(new_level){
+    global_log_level = new_level;
+    set_level(new_level)
+}
+
 function set_level(new_level) {
-    curr_log_level = new_level
+    if(new_level > global_log_level){
+        curr_log_level = new_level;
+    }else{
+        curr_log_level = global_log_level;
+    }
 }
 
 function log(log_level, msg) {
@@ -125,6 +135,7 @@ function silly(msg) {
 
 module.exports = {
     LOG_LEVELS,
+    set_global_level,
     set_level,
     log,
     error,

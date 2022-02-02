@@ -7,6 +7,7 @@
 const _cp = require('child_process'),
 	_fs = require('fs'),
 	_http = require('http'),
+	_https = require('https')
 	_path = require('path'),
 	_sio = require('socket.io'),
 	_url = require('url'),
@@ -79,7 +80,7 @@ function __respond(response, statusCode, reason, data, headers)
 	else
 		response.end(content, encoding);
 
-	logger.http("socketio _ 'respond' <br/>" + statusCode,{'from':"server",'to':"client"});
+	logger.http("socketio _ 'respond' <br/>" + statusCode ,{'from':"server",'to':"client"});
 }
 
 
@@ -113,8 +114,41 @@ function __send(socket, statusCode, reason, data, headers)
 }
 
 
+/******************************* PARAMETERIZATION ******************************/
+
+const args = process.argv.slice(2)
+
+for( arg in args){
+	var split_arg = args[arg].split("=");
+	switch(split_arg[0]){
+		case "--log":
+			logger.set_global_level(logger.LOG_LEVELS[split_arg[1]]);
+			break;
+		case "--help":
+		default:
+			console.log("console argument usage");
+			console.log("--help for this message");
+			console.log("--log=<log level> to set loging level");
+			console.log("        ERROR - to only log execution errors");
+			console.log("        WARN - to aditionaly log execution warnings");
+			console.log("        INFO - to aditionaly log general execution information");
+			console.log("        HTTP - to aditionaly log HTTP message exchange");
+			console.log("        VERBOSE - to aditionaly log verbose execution information ");
+			console.log("        DEBUG - to aditionaly log debug information");
+			console.log("        SILLY - we don't talk about silly");
+			process.exit(1);
+			break;
+	}
+}
+
 /************************************ LOGIC ***********************************/
-var httpserver = _http.createServer( 
+const options = {
+	key: _fs.readFileSync('key.pem'),
+	cert: _fs.readFileSync('cert.pem')
+};
+
+//var httpserver = _https.createServer(options, 
+var httpserver = _http.createServer(
 		function(req, resp) 
 		{
 			var url = _url.parse(req.url,true);
@@ -322,7 +356,16 @@ var httpserver = _http.createServer(
 							catch(err)	{__respond(resp,500,String(err));}
 					});
 
+			/* serve [a subset of] user preferences */
+			else if( req.method == 'GET' && url.pathname.match(/newCID$/) )
+			{
+				// generate unique client ID
+				// should use uuid library
 
+				var UID = Date.now().toString(36).slice(-9) 
+						  + Math.random().toString(36).substring(2, 9);
+				__respond(resp,200,'',_utils.jsons(UID));
+			}
 			/* update user preferences
 
 				1 retrieve all post data
