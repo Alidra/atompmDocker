@@ -115,7 +115,7 @@ function __send(socket, statusCode, reason, data, headers)
 
 
 /******************************* PARAMETERIZATION ******************************/
-
+var connectionType = "http";
 const args = process.argv.slice(2)
 
 for( arg in args){
@@ -124,6 +124,8 @@ for( arg in args){
 		case "--log":
 			logger.set_global_level(logger.LOG_LEVELS[split_arg[1]]);
 			break;
+		case "--https":
+			connectionType = "https";
 		case "--help":
 		default:
 			console.log("console argument usage");
@@ -142,10 +144,10 @@ for( arg in args){
 }
 
 /************************************ LOGIC ***********************************/
-const options = {
+/* const options = {
 	key: _fs.readFileSync('key.pem'),
 	cert: _fs.readFileSync('cert.pem')
-};
+}; */
 
 //var httpserver = _https.createServer(options, 
 var httpserver = _http.createServer(

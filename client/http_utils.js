@@ -51,7 +51,9 @@ HttpUtils = function(){
 //			console.log(sync);
 			req.open(method, url+(params ? params : ''), !sync);
 			req.onreadystatechange = onreadystatechange;
-			req.send(null);  
+//			req.send(null);
+			params = JSON.stringify({'clientID':__clientID});
+			req.send(params);
 		}
 		else if( method == 'POST' || method == 'PUT' )
 		{
@@ -64,6 +66,14 @@ HttpUtils = function(){
 			req.open(method, url, !sync); 
 			req.onreadystatechange = onreadystatechange;
 
+			// if(params != undefined){
+			// 	params = $.extend(false,{},params,{'clientID':__clientID});
+			// }else{
+			// 	params =  {'clientID':__clientID};
+			// }
+
+			params = $.extend(false,{},params,{'clientID':__clientID});
+			
 			params = JSON.stringify(params);
 			req.send(params);
 

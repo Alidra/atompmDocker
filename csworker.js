@@ -1109,7 +1109,9 @@ logger.set_level(logger.LOG_LEVELS.INFO);
 						resp,
 						'already subscribed to an asworker');
 
-			if( reqData != undefined )
+			// because now messages will all have at least clientID
+			// we now have to check for keys length > 1 for actual message data
+			if( reqData != undefined && Object.keys(reqData).length > 1 )
 			{
 				if( reqData['aswid'] == undefined ||
 					 reqData['cswid'] == undefined )
