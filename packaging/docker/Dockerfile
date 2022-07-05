@@ -33,6 +33,8 @@ RUN npm install
 
 COPY run_AToMPM_local.sh ./run_AToMPM_local.sh
 
+RUN chmod 775 run_AToMPM_local.sh
+
 # Port
 EXPOSE 8124
 
