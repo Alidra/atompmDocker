@@ -11,16 +11,6 @@
 
 1. `docker build -t atompmvm .`
 
-1. Export the docker image:
-
-   1. `docker save atompmvm | gzip > atompmvm.tar.gz`
-
-## Loading the Image
-
-```
-docker load < atompmvm.tar.gz
-```
-
 ## Running the Container
 
 1. Run the docker container (one of the following)
