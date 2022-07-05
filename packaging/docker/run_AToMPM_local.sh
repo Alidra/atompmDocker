@@ -1,8 +1,13 @@
 #!/bin/bash
+# Author: Yentl Van Tendeloo and Bentley James Oakes
 
 set -e
 
-python3 mt/main.py &
-sleep 1
+echo "Running AToMPM script..."
+echo "Starting node..."
+node httpwsd.js &
+serverpid=$!
+sleep 3
 
-node httpwsd.js
+echo "Starting Python model transformation engine..."
+python mt/main.py
