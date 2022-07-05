@@ -10,4 +10,4 @@ serverpid=$!
 sleep 3
 
 echo "Starting Python model transformation engine..."
-python mt/main.py
+python3 mt/main.py
